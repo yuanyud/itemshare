@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.itemshare.mapper.ErrandServiceMapper">
+    
+    <resultMap type="ErrandService" id="ErrandServiceResult">
+        <result property="id"    column="id"    />
+        <result property="transactionId"    column="transaction_id"    />
+        <result property="runnerId"    column="runner_id"    />
+        <result property="serviceTime"    column="service_time"    />
+        <result property="serviceFee"    column="service_fee"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectErrandServiceVo">
+        select id, transaction_id, runner_id, service_time, service_fee, status, create_time, update_time, create_by, update_by, remark from is_errand_service
+    </sql>
+
+    <select id="selectErrandServiceList" parameterType="ErrandService" resultMap="ErrandServiceResult">
+        <include refid="selectErrandServiceVo"/>
+        <where>  
+            <if test="transactionId != null "> and transaction_id = #{transactionId}</if>
+            <if test="runnerId != null "> and runner_id = #{runnerId}</if>
+            <if test="serviceTime != null "> and service_time = #{serviceTime}</if>
+            <if test="serviceFee != null "> and service_fee = #{serviceFee}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectErrandServiceById" parameterType="Long" resultMap="ErrandServiceResult">
+        <include refid="selectErrandServiceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertErrandService" parameterType="ErrandService" useGeneratedKeys="true" keyProperty="id">
+        insert into is_errand_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="runnerId != null">runner_id,</if>
+            <if test="serviceTime != null">service_time,</if>
+            <if test="serviceFee != null">service_fee,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="transactionId != null">#{transactionId},</if>
+            <if test="runnerId != null">#{runnerId},</if>
+            <if test="serviceTime != null">#{serviceTime},</if>
+            <if test="serviceFee != null">#{serviceFee},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateErrandService" parameterType="ErrandService">
+        update is_errand_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="runnerId != null">runner_id = #{runnerId},</if>
+            <if test="serviceTime != null">service_time = #{serviceTime},</if>
+            <if test="serviceFee != null">service_fee = #{serviceFee},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteErrandServiceById" parameterType="Long">
+        delete from is_errand_service where id = #{id}
+    </delete>
+
+    <delete id="deleteErrandServiceByIds" parameterType="String">
+        delete from is_errand_service where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

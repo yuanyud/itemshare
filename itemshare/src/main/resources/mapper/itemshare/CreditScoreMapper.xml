@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.itemshare.mapper.CreditScoreMapper">
+    
+    <resultMap type="CreditScore" id="CreditScoreResult">
+        <result property="studentId"    column="student_id"    />
+        <result property="creditScore"    column="credit_score"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCreditScoreVo">
+        select student_id, credit_score, create_time, update_time, create_by, update_by, remark from is_credit_score
+    </sql>
+
+    <select id="selectCreditScoreList" parameterType="CreditScore" resultMap="CreditScoreResult">
+        <include refid="selectCreditScoreVo"/>
+        <where>  
+            <if test="creditScore != null "> and credit_score = #{creditScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectCreditScoreByStudentId" parameterType="Long" resultMap="CreditScoreResult">
+        <include refid="selectCreditScoreVo"/>
+        where student_id = #{studentId}
+    </select>
+
+    <insert id="insertCreditScore" parameterType="CreditScore" useGeneratedKeys="true" keyProperty="studentId">
+        insert into is_credit_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="creditScore != null">credit_score,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="creditScore != null">#{creditScore},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCreditScore" parameterType="CreditScore">
+        update is_credit_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="creditScore != null">credit_score = #{creditScore},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where student_id = #{studentId}
+    </update>
+
+    <delete id="deleteCreditScoreByStudentId" parameterType="Long">
+        delete from is_credit_score where student_id = #{studentId}
+    </delete>
+
+    <delete id="deleteCreditScoreByStudentIds" parameterType="String">
+        delete from is_credit_score where student_id in 
+        <foreach item="studentId" collection="array" open="(" separator="," close=")">
+            #{studentId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.itemshare.mapper.ItemMapper">
+    
+    <resultMap type="Item" id="ItemResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="category"    column="category"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectItemVo">
+        select id, name, category, description, status, image_url, student_id, create_time, update_time, create_by, update_by, remark from is_item
+    </sql>
+
+    <select id="selectItemList" parameterType="Item" resultMap="ItemResult">
+        <include refid="selectItemVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="category != null  and category != ''"> and category like concat('%', #{category}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+        </where>
+    </select>
+    
+    <select id="selectItemById" parameterType="Long" resultMap="ItemResult">
+        <include refid="selectItemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertItem" parameterType="Item" useGeneratedKeys="true" keyProperty="id">
+        insert into is_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="imageUrl != null">image_url,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="imageUrl != null">#{imageUrl},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateItem" parameterType="Item">
+        update is_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteItemById" parameterType="Long">
+        delete from is_item where id = #{id}
+    </delete>
+
+    <delete id="deleteItemByIds" parameterType="String">
+        delete from is_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
